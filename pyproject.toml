@@ -1,0 +1,13 @@
+[tool.poetry]
+name = "kv-api"
+version = "1.0.0"
+
+[tool.poetry.dependencies]
+fastapi = "^0.73.0"
+uvicorn = "^0.14.0"
+tarantool = "^2.7.2"
+python-jose = "^3.2.0"
+pytest = "^6.2.5"
+
+[tool.poetry.dev-dependencies]
+pytest-asyncio = "^0.14.0"
