@@ -77,4 +77,39 @@ http://localhost:8000/docs
 ```
 http://localhost:8000/docs#/
 ```
-Этот проект представляет собой простой пример RESTful API, работающего с Tarantool базой данных. Он демонстрирует основные функции API, такие как авторизация, регистрация, получение токена и доступ к данным.
+**Развертывание проекта с помощью Docker Compose**
+
+Чтобы развернуть проект с помощью Docker Compose, необходимо создать файл `docker-compose.yml` с следующим содержанием:
+```yml
+version: '3'
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - tarantool
+    environment:
+      - TARANTOOL_HOST=tarantool
+      - TARANTOOL_PORT=3301
+
+  tarantool:
+    image: tarantool/tarantool:2.7.0
+    ports:
+      - "3301:3301"
+    volumes:
+      - ./tarantool.lua:/etc/tarantool.lua
+```
+Этот файл определяет два сервиса: `api` и `tarantool`. Сервис `api` запускает API на порту 8000, а сервис `tarantool` запускает Tarantool базу данных на порту 3301.
+
+Чтобы развернуть проект, необходимо выполнить команду:
+```
+docker-compose up -d
+```
+После этого проект будет доступен по адресу `http://localhost:8000/docs`.
+
+Чтобы тестировать API, можно использовать команду:
+```
+http://localhost:8000/docs#/
+```
+Этот проект представляет собой простой пример RESTful API, работающего с Tarantool базой данных. Он демонстрирует основные функции API, такие как авторизация, р
