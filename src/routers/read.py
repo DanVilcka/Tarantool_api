@@ -1,18 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import APIRouter, Depends, Body
+from src.services.tarantool import TarantoolService
 
-from src.services import auth as auth_service
-from src.services import tarantool as tarantool_service
+read_router = APIRouter()
 
-from jose import JWTError
-
-router = APIRouter()
-
-@router.post("/api/read")
-async def read(keys: list, token: str = Depends(OAuth2PasswordBearer())):
-    try:
-        await auth_service.validate_token(token)
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Неправильный токен")
-    data = await tarantool_service.read(keys)
-    return {"data": data}
+@read_router.post("/read")
+async def read(key: str = Body(...), tarantool_service: TarantoolService = Depends()):
+    return tarantool_service.read("data", key, "")

@@ -1,14 +1,7 @@
 import pytest
-from fastapi.testclient import TestClient
-from src.main import app
-
-client = TestClient(app)
+from src.services.auth import AuthService
 
 def test_login():
-    response = client.post("/api/login", json={"username": "test", "password": "test"})
-    assert response.status_code == 200
-    assert "access_token" in response.json()
-
-def test_invalid_login():
-    response = client.post("/api/login", json={"username": "test", "password": "wrong"})
-    assert response.status_code == 401
+    auth_service = AuthService()
+    assert auth_service.login("admin", "presale") == "token"
+    assert auth_service.login("admin", "wrong_password") is None

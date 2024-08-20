@@ -1,6 +1,7 @@
-import logging
+import hashlib
 
-logging.basicConfig(level=logging.INFO)
+def hash_password(password: str) -> str:
+    return hashlib.sha256(password.encode()).hexdigest()
 
-def log_error(message):
-    logging.error(message)
+def verify_password(password: str, hashed_password: str) -> bool:
+    return hash_password(password) == hashed_password

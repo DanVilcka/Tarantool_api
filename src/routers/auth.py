@@ -1,15 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jose import jwt
+from fastapi import APIRouter, Depends, Body
+from src.services.auth import AuthService
+from src.services.tarantool import TarantoolService, get_db
 
-from src.services import auth as auth_service
+auth_router = APIRouter()
 
-router = APIRouter()
+@auth_router.post("/login")
+async def login(username: str = Body(...), password: str = Body(...), db: TarantoolService = Depends(get_db)):
+    auth_service = AuthService(db)
+    return auth_service.login(username, password)
 
-@router.post("/api/login")
-async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = await auth_service.authenticate_user(form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(status_code=401, detail="Неправильный логин или пароль")
-    access_token = jwt.encode({"sub": user.username}, secret_key="secret_key", algorithm="HS256")
-    return {"access_token": access_token, "token_type": "bearer"}
+@auth_router.post("/check-token")
+async def check_token(token: str = Body(...), username: str = Body(...), db: TarantoolService = Depends(get_db)):
+    auth_service = AuthService(db)
+    return {"result": auth_service.check_token(token, username)}

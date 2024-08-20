@@ -1,19 +1,32 @@
 version: '3'
-services:
-  api:
-    build: .
-    ports:
-      - "8000:8000"
-    depends_on:
-      - tarantool
-    environment:
-      - TARANTOOL_HOST=tarantool
-      - TARANTOOL_PORT=3301
 
+services:
   tarantool:
     image: tarantool/tarantool
     ports:
       - "3301:3301"
+    expose:
+      - 3301
     volumes:
-      - ./tarantool:/etc/tarantool
-    command: tarantool /etc/tarantool/tarantool.lua
+      - ./tarantool/tarantool.lua:/etc/tarantool.lua
+    command: tarantool /etc/tarantool.lua
+    networks:
+      - my-network
+
+  fastapi:
+    build: .
+    ports:
+      - "8080:8080"
+    expose:
+      - 8080
+    depends_on:
+      - tarantool
+    restart: always
+    environment:
+      - TARANTOOL_HOST=tarantool
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
