@@ -1,11 +1,16 @@
 [tool.poetry]
-name = "kv-api"
-version = "1.0.0"
+package-mode = false
+name = "tarantool-api"
+version = "0.1.0"
+description = ""
+authors = ["Daniil Vilchinskiy <danvilcka@gmail.com>"]
+readme = "README.md"
 
 [tool.poetry.dependencies]
+python = ">=3.7,<4.0"
 fastapi = "^0.73.0"
 uvicorn = "^0.14.0"
-tarantool = "^2.7.2"
+tarantool = "^0.6.3"
 python-jose = "^3.2.0"
 pytest = "^6.2.5"
 

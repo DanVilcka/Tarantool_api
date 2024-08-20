@@ -1,0 +1,19 @@
+version: '3'
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - tarantool
+    environment:
+      - TARANTOOL_HOST=tarantool
+      - TARANTOOL_PORT=3301
+
+  tarantool:
+    image: tarantool/tarantool
+    ports:
+      - "3301:3301"
+    volumes:
+      - ./tarantool:/etc/tarantool
+    command: tarantool /etc/tarantool/tarantool.lua
